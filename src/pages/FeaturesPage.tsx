@@ -141,6 +141,7 @@ export function FeaturesPage() {
           <div className="lg:col-span-6">
             <div className="overflow-hidden rounded-xl border border-dashed border-lemon/30 bg-chocolate/80 p-2">
               {!imgErrors.orbit ? (
+<<<<<<< HEAD
                 <div className="relative">
                   <img
                     src="/src/assets/images/patchwork_satellite_orbit_1794640077940.jpg"
@@ -153,6 +154,15 @@ export function FeaturesPage() {
                     AI-Generated Image
                   </span>
                 </div>
+=======
+                <img
+                  src="/src/assets/images/patchwork_satellite_orbit_1794640077940.jpg"
+                  alt="Artisanal stitched patchwork textile illustration of an orbital satellite sweeping amber beams over quilted forest valleys"
+                  referrerPolicy="no-referrer"
+                  onError={() => markImgError('orbit')}
+                  className="aspect-[4/3] w-full rounded-lg object-cover"
+                />
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               ) : (
                 <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-void">
                   <Flame className="h-8 w-8 text-tangerine" aria-hidden="true" />
@@ -275,6 +285,7 @@ export function FeaturesPage() {
           <div className="order-2 lg:order-1 lg:col-span-6">
             <div className="overflow-hidden rounded-xl border border-dashed border-lemon/30 bg-chocolate/80 p-2">
               {!imgErrors.lookout ? (
+<<<<<<< HEAD
                 <div className="relative">
                   <img
                     src="/src/assets/images/patchwork_lookout_station_1794640078486.jpg"
@@ -287,6 +298,15 @@ export function FeaturesPage() {
                     AI-Generated Image
                   </span>
                 </div>
+=======
+                <img
+                  src="/src/assets/images/patchwork_lookout_station_1794640078486.jpg"
+                  alt="Artisanal stitched patchwork fabric illustration of a forest fire lookout tower and weather station on quilted ridges"
+                  referrerPolicy="no-referrer"
+                  onError={() => markImgError('lookout')}
+                  className="aspect-[4/3] w-full rounded-lg object-cover"
+                />
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               ) : (
                 <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-void">
                   <Radio className="h-8 w-8 text-tangerine" aria-hidden="true" />
@@ -409,11 +429,16 @@ export function FeaturesPage() {
           </div>
         </article>
 
+<<<<<<< HEAD
         {/* 06. Map Key API Coverage, Data Scope & Clean CSV Export */}
+=======
+        {/* 06. Background Multi-Year Archive & Clean CSV Export */}
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
         <article className="rounded-2xl border border-olive/35 bg-charcoal/85 p-6 backdrop-blur-md sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold text-tangerine">
+<<<<<<< HEAD
                 06. NASA FIRMS Map Key Coverage &amp; Clean CSV Export
               </p>
               <h2 className="mt-1.5 font-display text-2xl font-semibold text-cream">
@@ -423,6 +448,18 @@ export function FeaturesPage() {
                 SlowBurn fetches live and 1-year sampled thermal detections directly through the
                 NASA FIRMS Map Key API and lets you download any filtered region or date range as a
                 clean CSV.
+=======
+                06. Background Archive &amp; Clean CSV Export
+              </p>
+              <h2 className="mt-1.5 font-display text-2xl font-semibold text-cream">
+                Pre-loaded historical archive with instant CSV export
+              </h2>
+              <p className="mt-1.5 max-w-2xl text-sm text-cream/80">
+                SlowBurn indexes our curated multi-year NASA FIRMS hotspot datasets directly on the
+                server in the background alongside live orbital feeds—so visitors can explore
+                1-year+ trace-backs smoothly without crashes and download any filtered region or
+                date range as a clean CSV.
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               </p>
             </div>
 
@@ -436,6 +473,7 @@ export function FeaturesPage() {
             </a>
           </div>
 
+<<<<<<< HEAD
           <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-xl border border-tangerine/40 bg-chocolate/75 p-4 text-xs leading-relaxed text-cream/85">
               <p className="font-semibold text-bright-yellow">
@@ -461,6 +499,8 @@ export function FeaturesPage() {
             </div>
           </div>
 
+=======
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
           <pre className="mt-5 overflow-x-auto rounded-xl border border-olive/30 bg-void p-4 font-mono text-[11px] leading-relaxed text-lemon">
             {sampleCsvPreview}
           </pre>

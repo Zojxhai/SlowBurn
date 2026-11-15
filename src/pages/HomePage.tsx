@@ -51,8 +51,13 @@ export function HomePage() {
 
               <p className="mt-5 max-w-xl text-base leading-relaxed text-cream/80">
                 SlowBurn pairs high-resolution satellite imagery with live thermal detections
+<<<<<<< HEAD
                 from NOAA-20, NOAA-21, Suomi-NPP, and MODIS via the NASA FIRMS Map Key API for
                 live monitoring and 1-year trace-back.
+=======
+                from NOAA-20, NOAA-21, Suomi-NPP, and MODIS—backed by a pre-loaded multi-year
+                background archive for instant historical trace-back.
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-5">
@@ -103,9 +108,13 @@ export function HomePage() {
                   <span className="font-medium text-cream">
                     Stitched Field Plate I — Orbital Thermal Horizon
                   </span>
+<<<<<<< HEAD
                   <span className="font-mono text-[11px] text-lemon">
                     AI-Generated Image
                   </span>
+=======
+                  <span className="font-mono text-[11px] text-lemon">VIIRS · MODIS</span>
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
                 </div>
               </div>
             </motion.div>
@@ -297,9 +306,12 @@ export function HomePage() {
                           referrerPolicy="no-referrer"
                           className="h-full w-full object-cover"
                         />
+<<<<<<< HEAD
                         <span className="absolute top-2.5 right-2.5 rounded border border-olive/50 bg-void/85 px-2 py-0.5 font-mono text-[10px] font-medium text-cream/90">
                           AI-Generated Image
                         </span>
+=======
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
                         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-void/95 via-void/70 to-transparent px-4 pt-6 pb-2.5 text-xs">
                           <span className="inline-flex items-center gap-2 font-semibold text-cream">
                             <FeedShapeIcon shape={feed.shape} color={feed.color} size={13} />

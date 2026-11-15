@@ -69,6 +69,17 @@ export interface DailySeriesPoint {
   highCount: number;
 }
 
+<<<<<<< HEAD
+=======
+export interface ServerArchiveStatus {
+  active: boolean;
+  fileCount: number;
+  totalRows: number;
+  dateMin: string;
+  dateMax: string;
+}
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 export interface FirmsGlobalResponse {
   meta: {
     days: number;
@@ -80,7 +91,11 @@ export interface FirmsGlobalResponse {
     truncatedMapPoints: boolean;
     feedErrors: Record<string, string>;
     processingLevels?: Record<string, 'NRT' | 'SP'>;
+<<<<<<< HEAD
     dataSource?: 'live-api' | 'sampled-sp-archive';
+=======
+    dataSource?: 'live-api' | 'sampled-sp-archive' | 'server-csv-archive';
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
   };
   summary: {
     totalDetections: number;
@@ -130,7 +145,11 @@ export interface CalendarResponse {
     regionName: string;
     calibrationFactor: number;
     yearsCovered: number[];
+<<<<<<< HEAD
     source: 'live-sp-nrt';
+=======
+    source: 'live-sp-nrt' | 'archive-csv';
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
     fetchedAt: string;
   };
   summary: {

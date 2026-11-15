@@ -2,6 +2,10 @@ import 'dotenv/config';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
+<<<<<<< HEAD
+=======
+import readline from 'readline';
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -103,15 +107,47 @@ interface CacheEntry {
   datasetUsed: string;
 }
 
+<<<<<<< HEAD
 const NRT_CACHE_TTL_MS = 15 * 60 * 1000;
 const SP_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_MEM_CACHE_ENTRIES = 320;
+=======
+interface ServerArchiveStore {
+  active: boolean;
+  fileCount: number;
+  totalRows: number;
+  dateMin: string;
+  dateMax: string;
+  rows: NormalizedFirmsRow[];
+}
+
+const serverArchive: ServerArchiveStore = {
+  active: false,
+  fileCount: 0,
+  totalRows: 0,
+  dateMin: '',
+  dateMax: '',
+  rows: [],
+};
+
+const NRT_CACHE_TTL_MS = 15 * 60 * 1000;
+const SP_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const MAX_MEM_CACHE_ENTRIES = 320;
+const MAX_SERVER_ARCHIVE_ROWS = 250000;
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 const firmsCache = new Map<string, CacheEntry>();
 const inflightFetches = new Map<string, Promise<{ rows: NormalizedFirmsRow[]; datasetUsed: string }>>();
 
 const DISK_CACHE_DIR = path.resolve(__dirname, '.cache', 'firms');
+<<<<<<< HEAD
 try {
   fs.mkdirSync(DISK_CACHE_DIR, { recursive: true });
+=======
+const SERVER_ARCHIVE_DIR = path.resolve(__dirname, 'data', 'firms');
+try {
+  fs.mkdirSync(DISK_CACHE_DIR, { recursive: true });
+  fs.mkdirSync(SERVER_ARCHIVE_DIR, { recursive: true });
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 } catch {
   // Ignore if filesystem is read-only
 }
@@ -168,6 +204,25 @@ function padAcqTime(raw: string): string {
   return raw.trim().padStart(4, '0');
 }
 
+<<<<<<< HEAD
+=======
+function detectSourceId(satRaw: string, instRaw: string, fileName: string): FirmsSourceId {
+  const sat = satRaw.trim().toUpperCase();
+  const inst = instRaw.trim().toUpperCase();
+  const fname = fileName.toUpperCase();
+  if (inst === 'MODIS' || sat === 'TERRA' || sat === 'AQUA' || fname.includes('M-C61') || fname.includes('MODIS')) {
+    return 'MODIS_NRT';
+  }
+  if (sat === 'N21' || sat === 'NOAA-21' || sat === 'J2' || fname.includes('J2V') || fname.includes('NOAA-21')) {
+    return 'VIIRS_NOAA21_NRT';
+  }
+  if (sat === 'N20' || sat === 'NOAA-20' || sat === 'J1' || fname.includes('J1V') || fname.includes('NOAA-20')) {
+    return 'VIIRS_NOAA20_NRT';
+  }
+  return 'VIIRS_SNPP_NRT';
+}
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 function parseFirmsCsv(csvText: string, source: FirmsSourceId): NormalizedFirmsRow[] {
   const lines = csvText.trim().split(/\r?\n/);
   if (lines.length <= 1) return [];
@@ -231,6 +286,151 @@ function parseFirmsCsv(csvText: string, source: FirmsSourceId): NormalizedFirmsR
   return rows;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Streams any .csv files inside /data/firms/ once on startup so every public
+ * visitor automatically sees pre-loaded 1-year+ global CSV data with zero uploads.
+ */
+async function loadServerArchiveDir(): Promise<void> {
+  if (!fs.existsSync(SERVER_ARCHIVE_DIR)) return;
+  const csvFiles = fs
+    .readdirSync(SERVER_ARCHIVE_DIR)
+    .filter((f) => f.toLowerCase().endsWith('.csv'))
+    .sort();
+
+  if (csvFiles.length === 0) {
+    console.log('No CSV files in data/firms/ — using live NASA FIRMS API + cache.');
+    return;
+  }
+
+  console.log(`Indexing ${csvFiles.length} server CSV file(s) from data/firms/...`);
+
+  const retained: NormalizedFirmsRow[] = [];
+  let totalRows = 0;
+  let dateMin = '';
+  let dateMax = '';
+
+  for (const fileName of csvFiles) {
+    console.log(`  Reading ${fileName}...`);
+    const fullPath = path.join(SERVER_ARCHIVE_DIR, fileName);
+    const stream = fs.createReadStream(fullPath, { encoding: 'utf8' });
+    const rl = readline.createInterface({ input: stream, crlfDelay: Infinity });
+
+    let headers: string[] | null = null;
+    let iLat = -1;
+    let iLon = -1;
+    let iBright4 = -1;
+    let iBright5 = -1;
+    let iScan = -1;
+    let iTrack = -1;
+    let iDate = -1;
+    let iTime = -1;
+    let iSat = -1;
+    let iInst = -1;
+    let iConf = -1;
+    let iVer = -1;
+    let iFrp = -1;
+    let iDn = -1;
+
+    for await (const rawLine of rl) {
+      const line = rawLine.trim();
+      if (!line) continue;
+
+      if (!headers) {
+        headers = line.split(',').map((h) => h.trim().toLowerCase());
+        const idx = (n: string) => headers!.indexOf(n);
+        iLat = idx('latitude');
+        iLon = idx('longitude');
+        iBright4 = idx('bright_ti4') !== -1 ? idx('bright_ti4') : idx('brightness');
+        iBright5 = idx('bright_ti5') !== -1 ? idx('bright_ti5') : idx('bright_t31');
+        iScan = idx('scan');
+        iTrack = idx('track');
+        iDate = idx('acq_date');
+        iTime = idx('acq_time');
+        iSat = idx('satellite');
+        iInst = idx('instrument');
+        iConf = idx('confidence');
+        iVer = idx('version');
+        iFrp = idx('frp');
+        iDn = idx('daynight');
+        continue;
+      }
+
+      if (iLat === -1 || iLon === -1 || iDate === -1) continue;
+
+      // Reservoir sampling check BEFORE splitting/allocating objects for multi-million-row CSVs
+      totalRows++;
+      let replaceIdx = -1;
+      if (retained.length >= MAX_SERVER_ARCHIVE_ROWS) {
+        const j = Math.floor(Math.random() * totalRows);
+        if (j >= MAX_SERVER_ARCHIVE_ROWS) {
+          continue;
+        }
+        replaceIdx = j;
+      }
+
+      const cols = line.split(',');
+      const lat = Number(cols[iLat]);
+      const lon = Number(cols[iLon]);
+      const acqDate = (cols[iDate] ?? '').trim();
+      if (Number.isNaN(lat) || Number.isNaN(lon) || !acqDate) {
+        totalRows--;
+        continue;
+      }
+
+      if (!dateMin || acqDate < dateMin) dateMin = acqDate;
+      if (!dateMax || acqDate > dateMax) dateMax = acqDate;
+
+      const satRaw = (cols[iSat] ?? '').trim();
+      const instRaw = (cols[iInst] ?? '').trim();
+      const source = detectSourceId(satRaw, instRaw, fileName);
+      const instrument = instRaw || (source === 'MODIS_NRT' ? 'MODIS' : 'VIIRS');
+      const confRaw = (cols[iConf] ?? 'n').trim();
+      const dnRaw = (cols[iDn] ?? 'D').trim().toUpperCase();
+
+      const row: NormalizedFirmsRow = {
+        lat,
+        lon,
+        brightTi4: Number(cols[iBright4]) || 0,
+        brightTi5: Number(cols[iBright5]) || 0,
+        scan: Number(cols[iScan]) || 0,
+        track: Number(cols[iTrack]) || 0,
+        acqDate,
+        acqTime: padAcqTime(cols[iTime] ?? '0'),
+        satellite: satRaw || (source === 'MODIS_NRT' ? 'MODIS' : 'VIIRS'),
+        instrument,
+        source,
+        sourceIdx: SOURCE_INDEX[source],
+        confidenceRaw: confRaw,
+        confidenceTier: normalizeConfidence(confRaw, instrument),
+        version: (cols[iVer] ?? '').trim(),
+        frp: Number(cols[iFrp]) || 0,
+        daynight: dnRaw === 'N' ? 'N' : 'D',
+      };
+
+      if (replaceIdx === -1) {
+        retained.push(row);
+      } else {
+        retained[replaceIdx] = row;
+      }
+    }
+  }
+
+  if (totalRows > 0) {
+    serverArchive.active = true;
+    serverArchive.fileCount = csvFiles.length;
+    serverArchive.totalRows = totalRows;
+    serverArchive.dateMin = dateMin;
+    serverArchive.dateMax = dateMax;
+    serverArchive.rows = retained;
+    console.log(
+      `SlowBurn shared server archive loaded: ${csvFiles.length} file(s), ${totalRows.toLocaleString()} rows (${dateMin}..${dateMax})`
+    );
+  }
+}
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 function resolveFirmsDataset(
   source: FirmsSourceId,
   targetDate: string | null
@@ -511,7 +711,11 @@ function buildAggregatedResponse(
   maxPoints: number,
   feedErrors: Record<string, string>,
   processingLevels: Record<string, 'NRT' | 'SP'>,
+<<<<<<< HEAD
   dataSource: 'live-api' | 'sampled-sp-archive'
+=======
+  dataSource: 'live-api' | 'sampled-sp-archive' | 'server-csv-archive'
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 ) {
   let peakFrp = 0;
   let totalFrpMw = 0;
@@ -675,7 +879,11 @@ function buildAggregatedResponse(
 
 /**
  * Fetches quota-safe multi-window NASA FIRMS _SP/_NRT data for 30d / 90d / 365d
+<<<<<<< HEAD
  * using the configured FIRMS_MAP_KEY.
+=======
+ * when no local server CSV archive is loaded in /data/firms/.
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
  */
 async function fetchMultiWindowSpan(
   mapKey: string,
@@ -801,6 +1009,10 @@ function clampRegionBboxForCalendar(
 
 async function startServer() {
   console.log('Starting SlowBurn server...');
+<<<<<<< HEAD
+=======
+  await loadServerArchiveDir();
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 
   const app = express();
   const port = Number(process.env.PORT) || 3000;
@@ -836,11 +1048,70 @@ async function startServer() {
 
   app.get('/api/firms/status', (_req, res) => {
     res.json({
+<<<<<<< HEAD
       mode: 'live-firms-map-key',
       hasMapKey: Boolean(process.env.FIRMS_MAP_KEY?.trim()),
     });
   });
 
+=======
+      active: serverArchive.active,
+      fileCount: serverArchive.fileCount,
+      totalRows: serverArchive.totalRows,
+      dateMin: serverArchive.dateMin,
+      dateMax: serverArchive.dateMax,
+    });
+  });
+
+  function getServerArchiveWindow(
+    sources: FirmsSourceId[],
+    days: number,
+    targetDate: string | null,
+    confidenceFilter: string,
+    daynightFilter: string,
+    bbox: [number, number, number, number] | null
+  ): NormalizedFirmsRow[] | null {
+    if (!serverArchive.active) return null;
+    const sourceSet = new Set<FirmsSourceId>(sources);
+
+    if (targetDate) {
+      if (targetDate < serverArchive.dateMin || targetDate > serverArchive.dateMax) {
+        return null;
+      }
+      const endMs = new Date(`${targetDate}T00:00:00Z`).getTime();
+      const startStr = new Date(endMs - (Math.min(days, 365) - 1) * 86400000)
+        .toISOString()
+        .slice(0, 10);
+      return applyRowFilters(
+        serverArchive.rows,
+        confidenceFilter,
+        daynightFilter,
+        bbox,
+        sourceSet,
+        startStr,
+        targetDate
+      );
+    }
+
+    if (days > 5) {
+      const endStr = serverArchive.dateMax;
+      const endMs = new Date(`${endStr}T00:00:00Z`).getTime();
+      const startStr = new Date(endMs - (days - 1) * 86400000).toISOString().slice(0, 10);
+      return applyRowFilters(
+        serverArchive.rows,
+        confidenceFilter,
+        daynightFilter,
+        bbox,
+        sourceSet,
+        startStr,
+        endStr
+      );
+    }
+
+    return null;
+  }
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
   app.get('/api/firms/global', async (req, res) => {
     const sources = parseSourcesParam(req.query.sources);
     const daysRaw = Number(req.query.days ?? 1);
@@ -856,6 +1127,34 @@ async function startServer() {
       ? 65000
       : Math.min(120000, Math.max(1000, maxPointsRaw));
 
+<<<<<<< HEAD
+=======
+    // 1. Check Shared Server CSV Archive first for 30d/90d/1yr or covered historical dates
+    const archiveSlice = getServerArchiveWindow(
+      sources,
+      days,
+      targetDate,
+      confidenceFilter,
+      daynightFilter,
+      bbox
+    );
+    if (archiveSlice) {
+      res.json(
+        buildAggregatedResponse(
+          archiveSlice,
+          days,
+          targetDate,
+          sources,
+          maxPoints,
+          {},
+          {},
+          'server-csv-archive'
+        )
+      );
+      return;
+    }
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
     const mapKey = process.env.FIRMS_MAP_KEY?.trim();
     if (!mapKey) {
       res.status(500).json({
@@ -964,6 +1263,159 @@ async function startServer() {
     regionName: string,
     confidenceFilter: string
   ) {
+<<<<<<< HEAD
+=======
+    // If shared server archive covers >= 60 days, build calendar directly from server CSVs
+    if (serverArchive.active && serverArchive.rows.length > 0) {
+      const filteredRows = applyRowFilters(
+        serverArchive.rows,
+        confidenceFilter,
+        'all',
+        rawBbox
+      );
+      const ymMap = new Map<
+        string,
+        {
+          year: number;
+          month: number;
+          rawModis: number;
+          rawViirs: number;
+          totalFrpMw: number;
+          clusters: Set<string>;
+          days: Set<string>;
+        }
+      >();
+      let overlapModis = 0;
+      let overlapViirs = 0;
+      const flags = new Map<string, { m: number; v: number }>();
+
+      for (const r of filteredRows) {
+        if (r.acqDate.length < 7) continue;
+        const ym = r.acqDate.slice(0, 7);
+        const f = flags.get(ym) ?? { m: 0, v: 0 };
+        if (r.source === 'MODIS_NRT') f.m++;
+        else f.v++;
+        flags.set(ym, f);
+      }
+      for (const f of flags.values()) {
+        if (f.m > 0 && f.v > 0) {
+          overlapModis += f.m;
+          overlapViirs += f.v;
+        }
+      }
+      const calibrationFactor =
+        overlapModis >= 15 && overlapViirs >= 30
+          ? Math.min(0.65, Math.max(0.15, overlapModis / overlapViirs))
+          : DEFAULT_VIIRS_TO_MODIS_SCALE;
+
+      for (const r of filteredRows) {
+        if (r.acqDate.length < 7) continue;
+        const year = Number(r.acqDate.slice(0, 4));
+        const month = Number(r.acqDate.slice(5, 7));
+        const ym = r.acqDate.slice(0, 7);
+        let e = ymMap.get(ym);
+        if (!e) {
+          e = {
+            year,
+            month,
+            rawModis: 0,
+            rawViirs: 0,
+            totalFrpMw: 0,
+            clusters: new Set(),
+            days: new Set(),
+          };
+          ymMap.set(ym, e);
+        }
+        if (r.source === 'MODIS_NRT') e.rawModis++;
+        else e.rawViirs++;
+        e.totalFrpMw += r.frp;
+        e.clusters.add(computeClusterKey(r));
+        e.days.add(r.acqDate);
+      }
+
+      const rawCells = Array.from(ymMap.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([ym, e]) => ({
+          year: e.year,
+          month: e.month,
+          ym,
+          rawModis: e.rawModis,
+          rawViirs: e.rawViirs,
+          rawTotal: e.rawModis + e.rawViirs,
+          harmonizedIndex:
+            e.rawModis > 0 && e.rawViirs > 0
+              ? Math.round((e.rawModis + e.rawViirs * calibrationFactor) / 2)
+              : Math.round(e.rawModis + e.rawViirs * calibrationFactor),
+          clusteredEvents: e.clusters.size,
+          totalFrpMw: Number(e.totalFrpMw.toFixed(1)),
+          sampleDays: e.days.size,
+        }));
+
+      if (rawCells.length >= 6) {
+        const baselineSums = Array.from({ length: 12 }, () => ({ sumH: 0, sumRaw: 0, count: 0 }));
+        for (const c of rawCells) {
+          const b = baselineSums[c.month - 1];
+          b.sumH += c.harmonizedIndex;
+          b.sumRaw += c.rawTotal;
+          b.count++;
+        }
+        const monthlyBaseline = baselineSums.map((b, i) => ({
+          month: i + 1,
+          label: MONTH_LABELS[i],
+          meanHarmonizedIndex: b.count ? Number((b.sumH / b.count).toFixed(1)) : 0,
+          meanRawTotal: b.count ? Number((b.sumRaw / b.count).toFixed(1)) : 0,
+        }));
+        const cells = rawCells.map((c) => {
+          const base = monthlyBaseline[c.month - 1]?.meanHarmonizedIndex ?? 0;
+          return {
+            ...c,
+            anomalyPct: base > 0 ? Number((((c.harmonizedIndex - base) / base) * 100).toFixed(1)) : null,
+          };
+        });
+        const trailing12 = cells.slice(-12);
+        let peakMonthIdx = 0;
+        for (let i = 1; i < 12; i++) {
+          if (monthlyBaseline[i].meanHarmonizedIndex > monthlyBaseline[peakMonthIdx].meanHarmonizedIndex) {
+            peakMonthIdx = i;
+          }
+        }
+        const yearTotals = new Map<number, number>();
+        for (const c of cells) yearTotals.set(c.year, (yearTotals.get(c.year) ?? 0) + c.harmonizedIndex);
+        let strongestYear: number | null = null;
+        let maxYT = -1;
+        for (const [y, v] of yearTotals.entries()) {
+          if (v > maxYT) {
+            maxYT = v;
+            strongestYear = y;
+          }
+        }
+        return {
+          response: {
+            meta: {
+              bbox: rawBbox ?? [-180, -85, 180, 85],
+              regionName: rawBbox ? regionName : 'Shared Server CSV Archive (Global)',
+              calibrationFactor: Number(calibrationFactor.toFixed(3)),
+              yearsCovered: Array.from(new Set(cells.map((c) => c.year))).sort((a, b) => a - b),
+              source: 'archive-csv' as const,
+              fetchedAt: new Date().toISOString(),
+            },
+            summary: {
+              trailing12MonthsHarmonized: trailing12.reduce((s, c) => s + c.harmonizedIndex, 0),
+              trailing12MonthsRaw: trailing12.reduce((s, c) => s + c.rawTotal, 0),
+              peakMonthLabel: MONTH_LABELS[peakMonthIdx],
+              peakMonthIndex: peakMonthIdx + 1,
+              strongestYear,
+              latestMonthAnomalyPct: cells[cells.length - 1]?.anomalyPct ?? null,
+            },
+            monthlyBaseline,
+            cells,
+          },
+          allHotspotRows: filteredRows,
+        };
+      }
+    }
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
     if (!mapKey) {
       throw new Error('FIRMS_MAP_KEY is not configured.');
     }
@@ -1000,6 +1452,28 @@ async function startServer() {
       });
     }
 
+<<<<<<< HEAD
+=======
+    const benchmarkYears = [2005, 2010, 2015, 2020, currentYear - 2, currentYear - 1].filter(
+      (y, idx, arr) => y >= 2001 && y <= currentYear - 1 && arr.indexOf(y) === idx
+    );
+
+    for (const yr of benchmarkYears) {
+      for (let m = 1; m <= 12; m++) {
+        const ym = `${yr}-${String(m).padStart(2, '0')}`;
+        if (!monthSlots.some((s) => s.ym === ym)) {
+          monthSlots.push({
+            year: yr,
+            month: m,
+            ym,
+            sampleDate: `${yr}-${String(m).padStart(2, '0')}-15`,
+            includeViirs: false,
+          });
+        }
+      }
+    }
+
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
     const tasks: Array<() => Promise<{ ym: string; rows: NormalizedFirmsRow[] }>> = [];
     for (const slot of monthSlots) {
       tasks.push(async () => {
@@ -1236,6 +1710,7 @@ async function startServer() {
       typeof req.query.daynight === 'string' ? req.query.daynight : 'all';
     const bbox = parseBboxParam(req.query.bbox);
 
+<<<<<<< HEAD
     try {
       let filtered: NormalizedFirmsRow[];
       const mapKey = process.env.FIRMS_MAP_KEY?.trim();
@@ -1271,6 +1746,56 @@ async function startServer() {
           }
         });
         filtered = applyRowFilters(allRaw, confidenceFilter, daynightFilter, bbox);
+=======
+    const archiveSlice = getServerArchiveWindow(
+      sources,
+      days,
+      targetDate,
+      confidenceFilter,
+      daynightFilter,
+      bbox
+    );
+
+    try {
+      let filtered: NormalizedFirmsRow[];
+      if (archiveSlice) {
+        filtered = archiveSlice;
+      } else {
+        const mapKey = process.env.FIRMS_MAP_KEY?.trim();
+        if (!mapKey) {
+          res.status(500).send('FIRMS_MAP_KEY not configured');
+          return;
+        }
+        const areaParam = targetDate || days > 5 ? formatAreaForFirmsApi(bbox) : 'world';
+        if (!targetDate && days > 5) {
+          const spanRes = await fetchMultiWindowSpan(mapKey, sources, days, areaParam);
+          filtered = applyRowFilters(spanRes.rows, confidenceFilter, daynightFilter, bbox);
+        } else {
+          const useRolling24h = !targetDate && days === 1;
+          const apiDays = useRolling24h ? 2 : Math.min(5, days);
+          const cutoffMs = useRolling24h ? Date.now() - 24 * 60 * 60 * 1000 : 0;
+          const results = await Promise.allSettled(
+            sources.map((src) => fetchFirmsArea(mapKey, src, apiDays, targetDate, areaParam))
+          );
+          const allRaw: NormalizedFirmsRow[] = [];
+          results.forEach((r) => {
+            if (r.status === 'fulfilled') {
+              const rows = r.value.rows;
+              for (let k = 0; k < rows.length; k++) {
+                const row = rows[k];
+                if (useRolling24h) {
+                  const ts = Date.parse(
+                    `${row.acqDate}T${row.acqTime.slice(0, 2)}:${row.acqTime.slice(2, 4)}:00Z`
+                  );
+                  if (!Number.isNaN(ts) && ts < cutoffMs) continue;
+                }
+                allRaw.push(row);
+              }
+            }
+          });
+          filtered = applyRowFilters(allRaw, confidenceFilter, daynightFilter, bbox);
+        }
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
       }
 
       const header =

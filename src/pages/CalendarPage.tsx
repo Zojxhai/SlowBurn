@@ -154,14 +154,23 @@ export function CalendarPage() {
         <div className="flex flex-col gap-4 border-b border-olive/35 pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-medium text-lemon">
+<<<<<<< HEAD
               MODIS + VIIRS Harmonized Time Series · Trailing 1-Year Fire Climatology
+=======
+              MODIS (2000–Present) + VIIRS Harmonized Time Series · Multi-Year Fire Climatology
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </p>
             <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-cream sm:text-4xl">
               Burning Activity Calendar
             </h1>
             <p className="mt-1.5 max-w-2xl text-sm text-cream/75">
+<<<<<<< HEAD
               Compare trailing 12-month wildfire activity across MODIS and VIIRS—with sensor
               resolution bias normalized and monthly anomalies tracked.
+=======
+              Compare trailing 12-month wildfire seasons against historical MODIS benchmarks since
+              the early 2000s—with sensor resolution bias normalized and monthly anomalies tracked.
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </p>
           </div>
 
@@ -287,7 +296,12 @@ export function CalendarPage() {
                 <strong className="font-mono text-bright-yellow">
                   1 VIIRS ≈ {calendarData.meta.calibrationFactor} MODIS
                 </strong>{' '}
+<<<<<<< HEAD
                 (trailing 12 months calibrated with MODIS + VIIRS)
+=======
+                (trailing 12 months calibrated with MODIS + VIIRS; historical benchmark years via
+                MODIS _SP archive)
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               </>
             )}
           </p>
@@ -327,7 +341,11 @@ export function CalendarPage() {
               <p className="mt-1 font-mono text-2xl font-semibold text-tangerine tabular-nums">
                 {calendarLoading ? '—' : calendarData?.summary.peakMonthLabel ?? '—'}
               </p>
+<<<<<<< HEAD
               <p className="mt-0.5 text-[11px] text-cream/60">Highest in trailing 12 months</p>
+=======
+              <p className="mt-0.5 text-[11px] text-cream/60">Highest multi-year average</p>
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </div>
 
             <div className="p-5">
@@ -358,7 +376,11 @@ export function CalendarPage() {
                       calendarData.summary.latestMonthAnomalyPct > 0 ? '+' : ''
                     }${calendarData.summary.latestMonthAnomalyPct}%`}
               </p>
+<<<<<<< HEAD
               <p className="mt-0.5 text-[11px] text-cream/60">vs 1-year monthly mean</p>
+=======
+              <p className="mt-0.5 text-[11px] text-cream/60">vs multi-year monthly mean</p>
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </div>
           </div>
         </div>
@@ -398,13 +420,22 @@ export function CalendarPage() {
 
           {calendarLoading ? (
             <div className="py-16 text-center text-sm text-lemon">
+<<<<<<< HEAD
               Querying NASA FIRMS MODIS (_SP) &amp; VIIRS archives across the trailing 1-year
               window...
+=======
+              Querying NASA FIRMS MODIS (_SP) &amp; VIIRS archives across 1-year trace-back and
+              historical baseline years...
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </div>
           ) : yearsDesc.length === 0 ? (
             <div className="py-14 text-center text-sm text-cream/70">
               <Flame className="mx-auto mb-2 h-7 w-7 text-tangerine" aria-hidden="true" />
+<<<<<<< HEAD
               No 1-year calendar records found for this filter. Try selecting another country
+=======
+              No multi-year calendar records found for this filter. Try selecting another country
+>>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               or clearing confidence filters.
             </div>
           ) : (
