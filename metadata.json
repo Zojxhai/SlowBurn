@@ -1,0 +1,6 @@
+{
+  "name": "FireWatch",
+  "description": "Global wildfire monitoring and thermal anomaly observatory designed for NASA FIRMS satellite data.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
