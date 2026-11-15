@@ -4,12 +4,12 @@ data/firms/
 *.parquet
 *.zip
 
-# Environment variables
+# Secrets
 .env
 .env.*
 !.env.example
 
-# Dependencies and build files
+# Dependencies and cache
 node_modules/
 .cache/
 dist/
