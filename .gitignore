@@ -1,9 +1,15 @@
-node_modules/
-build/
-dist/
-coverage/
-.DS_Store
-*.log
-.cache/
-.env*
+# Large datasets
+data/firms/
+*.csv
+*.parquet
+*.zip
+
+# Environment variables
+.env
+.env.*
 !.env.example
+
+# Dependencies and build files
+node_modules/
+.cache/
+dist/
