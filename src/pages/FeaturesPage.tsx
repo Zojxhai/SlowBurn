@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Download, Flame, MapPin, Radio, ShieldCheck } from 'lucide-react';
 import { useFirmsData } from '../context/FirmsDataContext';
+import orbitPatchworkImg from '../assets/images/patchwork_satellite_orbit_1794640077940.jpg';
+import lookoutPatchworkImg from '../assets/images/patchwork_lookout_station_1794640078486.jpg';
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -143,7 +145,7 @@ export function FeaturesPage() {
               {!imgErrors.orbit ? (
                 <div className="relative">
                   <img
-                    src="/src/assets/images/patchwork_satellite_orbit_1794640077940.jpg"
+                    src={orbitPatchworkImg}
                     alt="Artisanal stitched patchwork textile illustration of an orbital satellite sweeping amber beams over quilted forest valleys"
                     referrerPolicy="no-referrer"
                     onError={() => markImgError('orbit')}
@@ -277,7 +279,7 @@ export function FeaturesPage() {
               {!imgErrors.lookout ? (
                 <div className="relative">
                   <img
-                    src="/src/assets/images/patchwork_lookout_station_1794640078486.jpg"
+                    src={lookoutPatchworkImg}
                     alt="Artisanal stitched patchwork fabric illustration of a forest fire lookout tower and weather station on quilted ridges"
                     referrerPolicy="no-referrer"
                     onError={() => markImgError('lookout')}

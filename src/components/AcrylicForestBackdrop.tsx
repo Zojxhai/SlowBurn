@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import forestBackdropImg from '../assets/images/bg_forest_acrylic_clean_1794640841666.jpg';
 
 export function AcrylicForestBackdrop() {
   const [imgError, setImgError] = useState(false);
@@ -10,7 +11,7 @@ export function AcrylicForestBackdrop() {
     >
       {!imgError && (
         <img
-          src="/src/assets/images/bg_forest_acrylic_clean_1794640841666.jpg"
+          src={forestBackdropImg}
           alt=""
           referrerPolicy="no-referrer"
           onError={() => setImgError(true)}

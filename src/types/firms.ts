@@ -1,3 +1,8 @@
+import satNoaa20Img from '../assets/images/sat_noaa20_jpss1_1794642336973.jpg';
+import satNoaa21Img from '../assets/images/sat_noaa21_jpss2_1794642337554.jpg';
+import satSuomiNppImg from '../assets/images/sat_suomi_npp_1794642337650.jpg';
+import satModisImg from '../assets/images/sat_modis_terra_1794642339643.jpg';
+
 export type FirmsSourceId =
   | 'VIIRS_NOAA20_NRT'
   | 'VIIRS_NOAA21_NRT'
@@ -164,7 +169,7 @@ export const SATELLITE_FEEDS: FirmsSourceMeta[] = [
       'Orbits pole-to-pole ~14 times every day with a high-detail 375m heat camera sharp enough to spot small brush fires and campfires.',
     funFact:
       'Crosses the equator around 1:30 PM local time every day, catching wildfires near peak afternoon heat.',
-    image: '/src/assets/images/sat_noaa20_jpss1_1794642336973.jpg',
+    image: satNoaa20Img,
   },
   {
     id: 'VIIRS_NOAA21_NRT',
@@ -179,7 +184,7 @@ export const SATELLITE_FEEDS: FirmsSourceMeta[] = [
       'NOAA’s newest polar weather & fire satellite, flying 50 minutes ahead of NOAA-20 so fast-moving fires are scanned twice as often.',
     funFact:
       'Its VIIRS sensor scans Earth in 22 infrared and visible light bands—seeing heat signatures straight through thick smoke.',
-    image: '/src/assets/images/sat_noaa21_jpss2_1794642337554.jpg',
+    image: satNoaa21Img,
   },
   {
     id: 'VIIRS_SNPP_NRT',
@@ -194,7 +199,7 @@ export const SATELLITE_FEEDS: FirmsSourceMeta[] = [
       'NASA & NOAA’s 2011 pathfinder spacecraft bridging older climate satellites and today’s high-resolution wildfire alert network.',
     funFact:
       'Named after weather-satellite pioneer Verner Suomi; its night sensor can spot glowing firelines even under moonlight.',
-    image: '/src/assets/images/sat_suomi_npp_1794642337650.jpg',
+    image: satSuomiNppImg,
   },
   {
     id: 'MODIS_NRT',
@@ -209,6 +214,6 @@ export const SATELLITE_FEEDS: FirmsSourceMeta[] = [
       'A twin-satellite NASA system (Terra scans in the morning, Aqua in the afternoon) surveying broad wildfire fronts in 1 km grid squares.',
     funFact:
       'Operating since 1999 & 2002, Terra and Aqua hold the longest continuous daily fire dataset in modern Earth science.',
-    image: '/src/assets/images/sat_modis_terra_1794642339643.jpg',
+    image: satModisImg,
   },
 ];

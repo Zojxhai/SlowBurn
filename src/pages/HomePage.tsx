@@ -5,6 +5,7 @@ import { ArrowRight, ArrowUpRight, MapPin } from 'lucide-react';
 import { useFirmsData } from '../context/FirmsDataContext';
 import { SATELLITE_FEEDS } from '../types/firms';
 import { FeedShapeIcon } from '../components/FeedShapeIcon';
+import heroQuiltImg from '../assets/images/patchwork_hero_quilt_1794640078067.jpg';
 
 export function HomePage() {
   const { data, loading, error, selectSingleSource, selectAllSources, refreshData } =
@@ -85,7 +86,7 @@ export function HomePage() {
                 <div className="overflow-hidden rounded-xl border border-dashed border-lemon/30">
                   {!imgError ? (
                     <img
-                      src="/src/assets/images/patchwork_hero_quilt_1794640078067.jpg"
+                      src={heroQuiltImg}
                       alt="Hand-stitched textile patchwork quilt showing forested mountain ridges, an orbiting satellite, and a glowing amber thermal horizon"
                       referrerPolicy="no-referrer"
                       onError={() => setImgError(true)}
