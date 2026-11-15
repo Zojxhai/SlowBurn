@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 node_modules/
 build/
 dist/
@@ -8,20 +7,3 @@ coverage/
 .cache/
 .env*
 !.env.example
-=======
-# Large datasets
-data/firms/
-*.csv
-*.parquet
-*.zip
-
-# Secrets
-.env
-.env.*
-!.env.example
-
-# Dependencies and cache
-node_modules/
-.cache/
-dist/
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4

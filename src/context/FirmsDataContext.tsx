@@ -14,10 +14,6 @@ import {
   FirmsSourceId,
   SATELLITE_FEEDS,
   SelectedCountry,
-<<<<<<< HEAD
-=======
-  ServerArchiveStatus,
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 } from '../types/firms';
 
 interface FirmsDataContextValue {
@@ -26,19 +22,11 @@ interface FirmsDataContextValue {
   error: string | null;
   selectedSources: FirmsSourceId[];
   days: number;
-<<<<<<< HEAD
   selectedDate: string; // '' = latest NRT, or YYYY-MM-DD (up to 1 year ago to today)
-=======
-  selectedDate: string; // '' = latest NRT, or YYYY-MM-DD (2000-11-01 to today)
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
   harmonizedMode: boolean;
   confidence: ConfidenceFilter;
   daynight: DayNightFilter;
   selectedCountry: SelectedCountry | null;
-<<<<<<< HEAD
-=======
-  serverArchive: ServerArchiveStatus | null;
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
   setDays: (days: number) => void;
   setSelectedDate: (date: string) => void;
   selectHistoricalWindow: (date: string, spanDays?: number) => void;
@@ -80,10 +68,6 @@ export function FirmsDataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTick, setRefreshTick] = useState<number>(0);
-<<<<<<< HEAD
-=======
-  const [serverArchive, setServerArchive] = useState<ServerArchiveStatus | null>(null);
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 
   // Burning Activity Calendar state
   const [calendarData, setCalendarData] = useState<CalendarResponse | null>(null);
@@ -91,19 +75,6 @@ export function FirmsDataProvider({ children }: { children: ReactNode }) {
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [calendarTick, setCalendarTick] = useState<number>(0);
 
-<<<<<<< HEAD
-=======
-  // Check shared background archive status on the server
-  useEffect(() => {
-    fetch('/api/firms/status')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((s) => {
-        if (s && typeof s.active === 'boolean') setServerArchive(s);
-      })
-      .catch(() => {});
-  }, []);
-
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
   const buildQueryParams = useCallback(() => {
     const params = new URLSearchParams();
     params.set('sources', selectedSources.join(','));
@@ -317,10 +288,6 @@ export function FirmsDataProvider({ children }: { children: ReactNode }) {
         confidence,
         daynight,
         selectedCountry,
-<<<<<<< HEAD
-=======
-        serverArchive,
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
         setDays: handleSetDays,
         setSelectedDate,
         selectHistoricalWindow,

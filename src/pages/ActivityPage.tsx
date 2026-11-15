@@ -51,14 +51,11 @@ export function ActivityPage() {
 
   const countryList = useMemo(() => getCountryList(), []);
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
-<<<<<<< HEAD
   const oneYearAgoStr = useMemo(() => {
     const d = new Date();
     d.setUTCFullYear(d.getUTCFullYear() - 1);
     return d.toISOString().slice(0, 10);
   }, []);
-=======
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 
   // Compute live Radiative Power severity buckets from real points (Palette #4720)
   const frpBuckets = useMemo(() => {
@@ -110,11 +107,7 @@ export function ActivityPage() {
               Thermal Telemetry Ledger ·{' '}
               {selectedDate
                 ? `Historical NASA FIRMS (${selectedDate})`
-<<<<<<< HEAD
                 : 'Live NASA FIRMS Map Key Feed'}
-=======
-                : 'Live NASA FIRMS & Server Archive'}
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </p>
             <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-cream sm:text-4xl">
               Fire Activity &amp; Intensity Analysis
@@ -213,21 +206,13 @@ export function ActivityPage() {
                 htmlFor="activity-date-input"
                 className="block text-xs font-semibold text-cream/80"
               >
-<<<<<<< HEAD
                 Historical Date (1-Year Trace-Back)
-=======
-                Historical Date (2000–Present)
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
               </label>
               <div className="mt-1.5 flex items-center gap-1 rounded-lg border border-olive/40 bg-void px-2.5 py-1.5">
                 <input
                   id="activity-date-input"
                   type="date"
-<<<<<<< HEAD
                   min={oneYearAgoStr}
-=======
-                  min="2000-11-01"
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
                   max={todayStr}
                   value={selectedDate}
                   onChange={(e) => {

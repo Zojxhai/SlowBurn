@@ -27,14 +27,11 @@ export function GlobalMapPage() {
   const appliedQueryRef = useRef<string>('');
   const countryList = useMemo(() => getCountryList(), []);
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
-<<<<<<< HEAD
   const oneYearAgoStr = useMemo(() => {
     const d = new Date();
     d.setUTCFullYear(d.getUTCFullYear() - 1);
     return d.toISOString().slice(0, 10);
   }, []);
-=======
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
 
   useEffect(() => {
     const qs = searchParams.toString();
@@ -119,22 +116,14 @@ export function GlobalMapPage() {
         <div className="flex flex-col gap-4 border-b border-olive/35 pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-medium text-lemon">
-<<<<<<< HEAD
               SlowBurn Satellite Imagery · 1-Year Trace-Back &amp; Area Drawing
-=======
-              SlowBurn Satellite Imagery · 2000–Present Historical Access &amp; Area Drawing
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </p>
             <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-cream sm:text-4xl">
               Live &amp; Historical Satellite Map
             </h1>
             <p className="mt-1.5 text-sm text-cream/75">
               Click any country, click <strong className="text-bright-yellow">Draw Area</strong> on
-<<<<<<< HEAD
               the map, or enter custom coordinates &amp; explore up to 1 year of fire history.
-=======
-              the map, or enter custom coordinates &amp; any date since Nov 2000.
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </p>
           </div>
 
@@ -152,11 +141,7 @@ export function GlobalMapPage() {
               className="inline-flex items-center gap-1.5 rounded-lg bg-tangerine px-3.5 py-2 text-xs font-bold text-void hover:bg-bright-yellow transition-colors whitespace-nowrap"
             >
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-<<<<<<< HEAD
               <span>1-Yr Burn Calendar</span>
-=======
-              <span>1-Yr+ Burn Calendar</span>
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
             </Link>
           </div>
         </div>
@@ -205,11 +190,7 @@ export function GlobalMapPage() {
               <input
                 id="map-date-picker"
                 type="date"
-<<<<<<< HEAD
                 min={oneYearAgoStr}
-=======
-                min="2000-11-01"
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
                 max={todayStr}
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}

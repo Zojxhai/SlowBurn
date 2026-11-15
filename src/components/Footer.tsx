@@ -36,7 +36,6 @@ export function Footer() {
           </Link>
         </nav>
       </div>
-<<<<<<< HEAD
 
       <div className="mx-auto mt-6 flex max-w-6xl flex-col gap-1.5 border-t border-olive/25 px-4 pt-5 text-center text-xs text-cream/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8 sm:text-left">
         <span>
@@ -46,8 +45,6 @@ export function Footer() {
           Backdrop, illustrations &amp; satellite visuals: AI-generated · Code: AI-assisted
         </span>
       </div>
-=======
->>>>>>> 8371c220393af0227dd66a2db31c8b135a590de4
     </footer>
   );
 }
